@@ -578,6 +578,7 @@ MonoBehaviour:
   fuerzaSalto: 5
   myState: 0
   visor: {fileID: 2034043317}
+  onGround: 0
 --- !u!54 &1828135265
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -619,7 +620,7 @@ GameObject:
   - component: {fileID: 2009785829}
   m_Layer: 0
   m_Name: PLANO
-  m_TagString: Untagged
+  m_TagString: suelo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

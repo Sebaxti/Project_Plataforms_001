@@ -2,14 +2,21 @@ using UnityEngine;
 
 public class SCR_Player : MonoBehaviour
 {
+    /*----public----*/
     public enum Estados {Walk,Attack,Idle,Jump }
     public float velocidad, fuerzaSalto;
-    private Animator animador;
     public Estados myState;
     public GameObject visor;
+    public bool onGround;
+
+    /*----private----*/
+    private Animator animador;
+    private Rigidbody rb;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         animador = GetComponent<Animator>();
         myState = Estados.Idle;
     }
@@ -34,56 +41,60 @@ public class SCR_Player : MonoBehaviour
 
         }
 
-        Debug.DrawRay(visor.transform.position, transform.forward);   
+        Debug.DrawRay(visor.transform.position, transform.forward);
     }
 
     void Idleing()
     {
+        //animador.Play("Anim_Idle_P1");
         if (Input.GetKey(KeyCode.W)|| Input.GetKey(KeyCode.A)|| Input.GetKey(KeyCode.S)|| Input.GetKey(KeyCode.D))
         {
             myState = Estados.Walk;
             Debug.Log("Walking");
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (onGround == true && Input.GetKeyDown(KeyCode.Space))
         {
             myState = Estados.Jump;
-            Debug.Log("Estado: Jumping");
+            Debug.Log("Jump");
         }
     }
 
-    void Walking(){
-        
-        bool enMovimiento=false;
+    void Walking()
+    {
+        bool enMovimiento = false;
 
-        if (Input.GetKey(KeyCode.W)){
+        if (Input.GetKey(KeyCode.W))
+        {
             transform.eulerAngles = new Vector3(0, 0, 0);
-            transform.Translate(transform.forward*velocidad*Time.deltaTime);
-            enMovimiento = true;
-            
-        }
-        if (Input.GetKey(KeyCode.D)){
-            transform.eulerAngles=new Vector3(0,270,0);
-            transform.Translate(transform.right*velocidad*Time.deltaTime);
+            transform.Translate(Vector3.forward * velocidad * Time.deltaTime, Space.World);
             enMovimiento = true;
         }
-        if (Input.GetKey(KeyCode.S)){
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.eulerAngles = new Vector3(0, 270, 0);
+            transform.Translate(Vector3.right * velocidad * Time.deltaTime, Space.World);
+            enMovimiento = true;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
             transform.eulerAngles = new Vector3(0, 180, 0);
-            transform.Translate(transform.forward*-1*velocidad*Time.deltaTime);
+            transform.Translate(Vector3.back * velocidad * Time.deltaTime, Space.World);
             enMovimiento = true;
         }
-        if (Input.GetKey(KeyCode.A)){
-            transform.eulerAngles=new Vector3(0,90,0);
-            transform.Translate(transform.right*-1*velocidad*Time.deltaTime);
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.eulerAngles = new Vector3(0, 90, 0);
+            transform.Translate(Vector3.left * velocidad * Time.deltaTime, Space.World);
             enMovimiento = true;
         }
 
         if (!enMovimiento)
         {
-            myState= Estados.Idle;
+            myState = Estados.Idle;
             Debug.Log("Idle");
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (onGround && Input.GetKeyDown(KeyCode.Space))
         {
             myState = Estados.Jump;
             Debug.Log("Jump");
@@ -92,11 +103,31 @@ public class SCR_Player : MonoBehaviour
 
     void Jumping()
     {
-        transform.Translate(Vector3.up*fuerzaSalto*Time.deltaTime);
+        animador.SetTrigger("Jump");
+        rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
+        onGround = false;
+        myState = Estados.Walk;
     }
     
     void setState(Estados newState)
     {
         myState=newState;
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag ("suelo"))
+        {
+            Debug.Log("Tocando");
+            onGround = true;
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("suelo"))
+        {
+            Debug.Log("En el aire");
+            onGround = false;
+        }
+    }
+    
 }
