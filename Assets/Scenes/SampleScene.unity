@@ -205,13 +205,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.9709676, z: -0.23921137, w: 0}
-  m_LocalPosition: {x: 0, y: 6.15, z: 11.27}
+  m_LocalRotation: {x: 0.23921137, y: 0, z: 0, w: 0.9709676}
+  m_LocalPosition: {x: 0, y: 6.15, z: -15.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 27.68, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 27.68, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,8 +439,8 @@ GameObject:
   - component: {fileID: 1828135261}
   - component: {fileID: 1828135260}
   - component: {fileID: 1828135259}
-  - component: {fileID: 1828135264}
   - component: {fileID: 1828135265}
+  - component: {fileID: 1828135266}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -562,23 +562,6 @@ Transform:
   - {fileID: 2034043318}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1828135264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828135258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2afde81758ad6084fb3c054a8ef0e55c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocidad: 5
-  fuerzaSalto: 5
-  myState: 0
-  visor: {fileID: 2034043317}
-  onGround: 0
 --- !u!54 &1828135265
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -606,6 +589,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &1828135266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828135258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2afde81758ad6084fb3c054a8ef0e55c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidad: 5
+  fuerzaSalto: 5
+  velocidadSprint: 8
+  fuerzaDash: 15
+  duracionDash: 0.2
+  tiempoMaximoDblShift: 0.3
+  myState: 0
+  visor: {fileID: 2034043317}
+  onGround: 0
 --- !u!1 &2009785828
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,7 +714,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.8031, y: 2.8031, z: 2.8031}
+  m_LocalScale: {x: 8.253728, y: 8.253728, z: 8.253728}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
