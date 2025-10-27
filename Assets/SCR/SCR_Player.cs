@@ -6,8 +6,9 @@ public class SCR_Player : MonoBehaviour
     public enum Estados {Walk,Attack,Idle,Jump,Sprint,Dash }
     public float velocidad, fuerzaSalto, velocidadSprint, fuerzaDash, duracionDash,tiempoMaximoDblShift;
     public Estados myState;
-    public GameObject visor;
+    public GameObject visor, modeloVisual;
     public bool onGround;
+    public float velocidadRotacion;
 
     /*----private----*/
     private Animator animador;
@@ -15,12 +16,13 @@ public class SCR_Player : MonoBehaviour
     private bool enDash;
     private float tiempoUltimoShift, tiempoDash;
     private Vector3 direccionDash,ultimaDireccion;
+    private float rotacionObjetivo;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        animador = GetComponent<Animator>();
+        animador = modeloVisual.GetComponent<Animator>();
         myState = Estados.Idle;
 
         tiempoUltimoShift = 0f;
@@ -54,6 +56,13 @@ public class SCR_Player : MonoBehaviour
                 print("bye");
                 break;
 
+        }
+
+        if(modeloVisual !=null)
+        {
+            float rotacionActual = modeloVisual.transform.eulerAngles.y;
+            float nuevaRotacion = Mathf.LerpAngle(rotacionActual, rotacionObjetivo, velocidadRotacion * Time.deltaTime);
+            modeloVisual.transform.eulerAngles = new Vector3(0, nuevaRotacion, 0);
         }
 
         Debug.DrawRay(visor.transform.position, transform.forward);
@@ -105,28 +114,32 @@ public class SCR_Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            transform.eulerAngles = new Vector3(0, 0, 0);
+            Debug.Log("Rotación Y del transform: " + transform.eulerAngles.y);
+            rotacionObjetivo = 0;
             transform.Translate(Vector3.forward * velocidad * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.forward;
             enMovimiento = true;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.eulerAngles = new Vector3(0, 90, 0);
+            Debug.Log("Rotación Y del transform: " + transform.eulerAngles.y);
+            rotacionObjetivo = 90;
             transform.Translate(Vector3.right * velocidad * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.right;
             enMovimiento = true;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            transform.eulerAngles = new Vector3(0, 180, 0);
+            Debug.Log("Rotación Y del transform: " + transform.eulerAngles.y);
+            rotacionObjetivo = 180;
             transform.Translate(Vector3.back * velocidad * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.back;
             enMovimiento = true;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.eulerAngles = new Vector3(0, 270, 0);
+            Debug.Log("Rotación Y del transform: " + transform.eulerAngles.y);
+            rotacionObjetivo = 270;
             transform.Translate(Vector3.left * velocidad * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.left;
             enMovimiento = true;
@@ -154,7 +167,7 @@ public class SCR_Player : MonoBehaviour
 
     void Jumping()
     {
-        animador.SetTrigger("Jump");
+        //animador.SetTrigger("Jump");
         rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
         onGround = false;
         myState = Estados.Walk;
@@ -166,28 +179,28 @@ public class SCR_Player : MonoBehaviour
         bool enMovimiento = false;
         if (Input.GetKey(KeyCode.W))
         {
-            transform.eulerAngles = new Vector3(0, 0, 0);
+            rotacionObjetivo = 0;
             transform.Translate(Vector3.forward * velocidadSprint * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.forward;
             enMovimiento = true;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.eulerAngles = new Vector3(0, 90, 0);
+            rotacionObjetivo = 90;
             transform.Translate(Vector3.right * velocidadSprint * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.right;
             enMovimiento = true;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            transform.eulerAngles = new Vector3(0, 180, 0);
+            rotacionObjetivo = 180;
             transform.Translate(Vector3.back * velocidadSprint * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.back;
             enMovimiento = true;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.eulerAngles = new Vector3(0, 270, 0);
+            rotacionObjetivo = 270;
             transform.Translate(Vector3.left * velocidadSprint * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.left;
             enMovimiento = true;
