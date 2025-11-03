@@ -6,21 +6,26 @@ public class SCR_PlataformaH : MonoBehaviour
     public float velocidad;
     public bool vaViene;
     public GameObject pointA, pointB;
-   
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-      vaViene = true;
+        vaViene = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (vaViene) 
+        MovimientoPlataforma();
+    }
+
+    void MovimientoPlataforma()
+    {
+        if (vaViene)
         {
-            transform.position = Vector3.MoveTowards(transform.position,pointA.transform.position,velocidad*Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, pointA.transform.position, velocidad * Time.deltaTime);
         }
-        else 
+        else
         {
             transform.position = Vector3.MoveTowards(transform.position, pointB.transform.position, velocidad * Time.deltaTime);
         }
@@ -33,5 +38,6 @@ public class SCR_PlataformaH : MonoBehaviour
             vaViene= !vaViene;
         }
     }
+
 }
 

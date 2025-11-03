@@ -4,24 +4,26 @@ public class SCR_Player : MonoBehaviour
 {
     /*----public----*/
     public enum Estados {Walk,Attack,Idle,Jump,Sprint,Dash }
-    public float velocidad, fuerzaSalto, velocidadSprint, fuerzaDash, duracionDash,tiempoMaximoDblShift, velocidadRotacion, fuerzaCaida;
-    public Estados myState;
+    public float velocidad, fuerzaSalto, velocidadSprint, fuerzaDash, duracionDash, tiempoMaximoDblShift, velocidadRotacion, gravedadExtra, gravedadBajaSalto, alturaMaximaSalto;
     public GameObject visor, modeloVisual;
-    public bool onGround, onPlataform;
+    
 
     /*----private----*/
-    private bool enMovimiento , dblSalto, enDash;
+    private Estados myState;
+    private bool onGround, onPlataform;
+    private bool enMovimiento , enDash;
+    private int saltosDisponibles = 2, saltosRestantes;
     private Rigidbody rb;
-    private int dblSaltoCont;
     private float tiempoUltimoShift, tiempoDash, rotacionObjetivo;
     private Vector3 direccionDash,ultimaDireccion;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        dblSalto =true;
+
         rb = GetComponent<Rigidbody>();
         myState = Estados.Idle;
+        saltosRestantes = saltosDisponibles; 
 
         enMovimiento = false;
         tiempoUltimoShift = 0f;
@@ -47,8 +49,6 @@ public class SCR_Player : MonoBehaviour
                 break;
             case Estados.Jump:
                 Jumping();
-                dblSaltoCont++;
-                print(dblSaltoCont);
                 break;
             case Estados.Dash:
                 Dashing();
@@ -64,11 +64,6 @@ public class SCR_Player : MonoBehaviour
             float rotacionActual = modeloVisual.transform.eulerAngles.y;
             float nuevaRotacion = Mathf.LerpAngle(rotacionActual, rotacionObjetivo, velocidadRotacion * Time.deltaTime);
             modeloVisual.transform.eulerAngles = new Vector3(0, nuevaRotacion, 0);
-        }
-
-        if (dblSaltoCont>1)
-        {
-            dblSalto = false;
         }
 
         Debug.DrawRay(transform.position, visor.transform.forward);
@@ -87,9 +82,7 @@ public class SCR_Player : MonoBehaviour
                 }
             }
             tiempoUltimoShift= tiempoActual;
-
         }
-
     }
     void Idleing()
     {
@@ -103,25 +96,21 @@ public class SCR_Player : MonoBehaviour
             else
             {
                 myState = Estados.Walk;
-                Debug.Log("Walking");
+                //Debug.Log("Walking");
             }
         }
-
-        if (dblSalto==true && (onPlataform == true||onGround == true) && Input.GetKeyDown(KeyCode.Space))
+        if ((onPlataform == true||onGround == true) && Input.GetKeyDown(KeyCode.Space))
         {
             myState = Estados.Jump;
-            Debug.Log("Jump");
+            //Debug.Log("Jump");
         }
         
     }
 
     void Walking()
     {
-        
-
         if (Input.GetKey(KeyCode.W))
         {
-            Debug.Log("Rotacion Y del transform: " + transform.eulerAngles.y);
             rotacionObjetivo = 0;
             transform.Translate(Vector3.forward * velocidad * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.forward;
@@ -129,7 +118,6 @@ public class SCR_Player : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.D))
         {
-            Debug.Log("Rotacion Y del transform: " + transform.eulerAngles.y);
             rotacionObjetivo = 90;
             transform.Translate(Vector3.right * velocidad * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.right;
@@ -137,7 +125,6 @@ public class SCR_Player : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.S))
         {
-            Debug.Log("Rotacion Y del transform: " + transform.eulerAngles.y);
             rotacionObjetivo = 180;
             transform.Translate(Vector3.back * velocidad * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.back;
@@ -145,35 +132,29 @@ public class SCR_Player : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.A))
         {
-            Debug.Log("Rotacion Y del transform: " + transform.eulerAngles.y);
             rotacionObjetivo = 270;
             transform.Translate(Vector3.left * velocidad * Time.deltaTime, Space.World);
             ultimaDireccion = Vector3.left;
             enMovimiento = true;
         }
-
         if (enMovimiento && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
         {
             myState = Estados.Sprint;
-            Debug.Log("Sprint");
+            //Debug.Log("Sprint");
         }
-
-
         if (!enMovimiento)
         {
             myState = Estados.Idle;
-            Debug.Log("Idle");
+            //Debug.Log("Idle");
         }
-
-        if (dblSalto == true && (onPlataform == true || onGround == true) && Input.GetKeyDown(KeyCode.Space))
+        if (saltosRestantes > 0 && (onPlataform == true || onGround == true) && Input.GetKeyDown(KeyCode.Space))
         {
             myState = Estados.Jump;
-            Debug.Log("Jump");
+            //Debug.Log("Jump");
         }
-        if (rb.linearVelocity.y < 5 || rb.linearVelocity.y>10)
-        {
-            rb.AddForce(Vector3.down*fuerzaCaida,ForceMode.Acceleration);
-        }
+        FuerzaCaida();
+
+
     }
 
 
@@ -208,38 +189,36 @@ public class SCR_Player : MonoBehaviour
             ultimaDireccion = Vector3.left;
             enMovimiento = true;
         }
-
         if (enMovimiento && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
         {
             myState = Estados.Walk;
-            Debug.Log("Walk");
+            //Debug.Log("Walk");
         }
         if (!enMovimiento)
         {
             myState = Estados.Idle;
-            Debug.Log("Idle");
+            //Debug.Log("Idle");
         }
-
-        if (dblSalto == true && (onPlataform == true || onGround == true) && Input.GetKeyDown(KeyCode.Space))
+        if (saltosRestantes > 0 && (onPlataform == true || onGround == true) && Input.GetKeyDown(KeyCode.Space))
         {
             myState = Estados.Jump;
-            Debug.Log("Jump");
+            //Debug.Log("Jump");
         }
-        if (rb.linearVelocity.y < 5)
-        {
-            rb.AddForce(Vector3.down * fuerzaCaida, ForceMode.Acceleration);
-        }
+        FuerzaCaida();
+
+
 
     }
     void Jumping()
     {
-
-        rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
-        if (dblSalto == false)
+        if (rb.linearVelocity.y<0)
         {
-            onGround = false;
-            onPlataform = false;
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z); 
         }
+        rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
+
+        saltosRestantes--;
+   
         myState = Estados.Walk;
         
     }
@@ -271,50 +250,68 @@ public class SCR_Player : MonoBehaviour
         }
     }
     
-    void setState(Estados newState)
+    /*void setState(Estados newState)
     {
         myState=newState;
+    }*/
+    void FuerzaCaida()
+    {
+        if(rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity += Vector3.up * Physics.gravity.y * (gravedadExtra - 1) * Time.deltaTime;
+        }else if(rb.linearVelocity.y>0)
+        {
+            rb.linearVelocity += Vector3.up * Physics.gravity.y * (gravedadBajaSalto - 1) * Time.deltaTime;
+
+        }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag ("suelo"))
         {
-            Debug.Log("Tocando suelo");
+            //Debug.Log("Tocando suelo");
             onGround = true;
-            dblSalto = true;
-            dblSaltoCont = 0;
+            saltosRestantes = saltosDisponibles;
+
         }
         if (collision.gameObject.CompareTag ("plataforma"))
         {
-            Debug.Log("Tocando plataforma");
+            //Debug.Log("Tocando plataforma");
             onPlataform = true;
-            dblSalto = true;
-            dblSaltoCont = 0;
+            saltosRestantes = saltosDisponibles;
+
             transform.SetParent (collision.transform);
         }
         
     }
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("suelo"))
-        {
-            if (dblSalto==false)
-            {
-                Debug.Log("En el aire");
-                onGround = false;
-            }
-            
-        }
         if (collision.gameObject.CompareTag("plataforma"))
-        {
-            if (dblSalto==false)
-            {
-                Debug.Log("En el aire");
-                onPlataform = false;
-            }
-            
+        { 
             transform.SetParent(null);
         }
     }
-    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //si toca la zona de muerte
+        if (other.CompareTag("Muerte"))
+        { 
+            SCR_CheckPointControlador.Instancia.RespawnearJugador(gameObject); 
+        }
+
+        //si toca el checkpoint
+        if (other.CompareTag("CheckPoint")) 
+        {
+            Transform checkpointPadre = other.transform.parent; // El "Checkpoint" padre
+            Transform puntoRespawn = checkpointPadre.Find("PuntoRespawn");
+
+            if (puntoRespawn != null)
+            {
+                SCR_CheckPointControlador.Instancia.ActualizarCheckPoint(puntoRespawn.position);
+            }
+        }
+    }
+
 }

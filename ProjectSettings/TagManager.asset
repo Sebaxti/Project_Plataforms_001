@@ -7,6 +7,9 @@ TagManager:
   - suelo
   - Coordenadas
   - plataforma
+  - Muerte
+  - CheckPoint
+  - Nextlvl
   layers:
   - Default
   - TransparentFX
