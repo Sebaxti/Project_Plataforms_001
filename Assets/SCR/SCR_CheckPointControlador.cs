@@ -6,7 +6,6 @@ public class SCR_CheckPointControlador : MonoBehaviour
     public Transform puntoRespawnInicial;
 
     private Vector3 ultimoCheckPoint;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private void Awake()
     {
@@ -28,8 +27,6 @@ public class SCR_CheckPointControlador : MonoBehaviour
         }
         
     }
-
-    // Update is called once per frame
     void Update()
     {
         

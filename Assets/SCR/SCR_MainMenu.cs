@@ -3,12 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class SCR_MainMenu : MonoBehaviour
 {
-    public GameObject panelMenu; // Arrastra el PanelMenu aquí
-    public GameObject panelOpciones; // Arrastra el PanelOpciones aquí
+    public GameObject panelMenu;
+    public GameObject panelOpciones;
 
     void Start()
     {
-        // Al inicio, muestra el menú y oculta opciones
         if (panelMenu != null) panelMenu.SetActive(true);
         if (panelOpciones != null) panelOpciones.SetActive(false);
     }
