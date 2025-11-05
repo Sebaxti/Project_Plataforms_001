@@ -10,6 +10,7 @@ TagManager:
   - Muerte
   - CheckPoint
   - Nextlvl
+  - Moneda
   layers:
   - Default
   - TransparentFX

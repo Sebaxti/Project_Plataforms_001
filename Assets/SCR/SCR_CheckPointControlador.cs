@@ -50,5 +50,9 @@ public class SCR_CheckPointControlador : MonoBehaviour
             rb.linearVelocity=Vector3.zero;
             rb.angularVelocity=Vector3.zero;
         }
+        if (SCR_ControladorJuego.instancia != null) 
+        {
+            SCR_ControladorJuego.instancia.PerderVida();
+        }
     }
 }

@@ -66,6 +66,11 @@ public class SCR_ : MonoBehaviour
                 rbJugador.AddForce(Vector3.up * fuerzaRebote, ForceMode.Impulse);
             }
 
+            if (SCR_ControladorJuego.instancia != null)
+            {
+                SCR_ControladorJuego.instancia.RecogerMoneda(SCR_ControladorJuego.instancia.valorMonedas+SCR_ControladorJuego.instancia.valorEnemigo);
+            }
+
             Destroy(gameObject);
         }
     }
